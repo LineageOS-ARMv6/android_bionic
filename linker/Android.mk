@@ -41,6 +41,10 @@ LOCAL_CFLAGS += -DLINKER_DEBUG=0
 # from the libc build
 ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
     LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+    ifeq ($(TARGET_ARCH_VARIANT),armv6-vfp)
+        LOCAL_ARM_MODE := arm
+        LOCAL_CFLAGS += -Wno-error
+    endif
 endif
 LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/private
 

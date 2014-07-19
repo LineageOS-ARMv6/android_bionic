@@ -667,6 +667,13 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_common
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+ifeq ($(TARGET_ARCH)-$(ARCH_ARM_HAVE_TLS_REGISTER),arm-true)
+    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+    ifeq ($(TARGET_ARCH_VARIANT),armv6-vfp)
+        LOCAL_ARM_MODE := arm
+    endif
+endif
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -736,6 +743,17 @@ LOCAL_SRC_FILES := \
 	bionic/libc_init_dynamic.c
 
 LOCAL_MODULE:= libc
+
+ifeq ($(TARGET_ARCH),arm)
+
+    ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
+        LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+        ifeq ($(TARGET_ARCH_VARIANT),armv6-vfp)
+            LOCAL_ARM_MODE := arm
+        endif
+    endif
+    
+endif
 
 # WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
 # make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
